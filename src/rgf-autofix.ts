@@ -5,7 +5,7 @@
             const bColor = node.getAttribute('rgf-background-color') || undefined;
 
             rgf.loadRGF(node, fColor, bColor);
-            node.setAttribute('rgf-fixed', '');
+            node.setAttribute('rgf-fixed', node.src);
         }));
     };
 

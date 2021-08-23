@@ -4,7 +4,7 @@
             var fColor = node.getAttribute('rgf-foreground-color') || undefined;
             var bColor = node.getAttribute('rgf-background-color') || undefined;
             rgf.loadRGF(node, fColor, bColor);
-            node.setAttribute('rgf-fixed', '');
+            node.setAttribute('rgf-fixed', node.src);
         }));
     };
     window.addEventListener('load', function () {
