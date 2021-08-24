@@ -9,14 +9,17 @@ var rgf = Object.freeze({
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
-        ctx.fillStyle = bColor;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = fColor;
         for (var y = 0; y < height; y++) {
             for (var xByte = 0; xByte < byteWidth; xByte++) {
                 for (var i = 7; i >= 0; i--) {
                     // the + 2 skips the width and height byte, no need to slice
-                    data[y * byteWidth + xByte + 2] & (1 << i) && ctx.fillRect(xByte * 8 + i, y, 1, 1);
+                    if (data[y * byteWidth + xByte + 2] & (1 << i)) {
+                        ctx.fillStyle = fColor;
+                    }
+                    else {
+                        ctx.fillStyle = bColor;
+                    }
+                    ctx.fillRect(xByte * 8 + i, y, 1, 1);
                 }
             }
         }

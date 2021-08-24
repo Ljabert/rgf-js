@@ -12,15 +12,17 @@ const rgf = Object.freeze({
         canvas.height = height;
         
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = bColor;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = fColor;
-
         for (let y = 0; y < height; y++) {
             for (let xByte = 0; xByte < byteWidth; xByte++) {
                 for (let i = 7; i >= 0; i--) {
                     // the + 2 skips the width and height byte, no need to slice
-                    data[y * byteWidth + xByte + 2] & (1 << i) && ctx.fillRect(xByte * 8 + i, y, 1, 1);
+                    if (data[y * byteWidth + xByte + 2] & (1 << i)) {
+                        ctx.fillStyle = fColor;
+                    } else {
+                        ctx.fillStyle = bColor;
+                    }
+    
+                    ctx.fillRect(xByte * 8 + i, y, 1, 1);
                 }
             }
         }
