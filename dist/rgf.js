@@ -1,5 +1,5 @@
-var rgf = (function () {
-    var setImageFromRGF = function (node, rgf, fColor, bColor) {
+var rgf = Object.freeze({
+    setImageFromRGF: function (node, rgf, fColor, bColor) {
         var data = new Uint8Array(rgf);
         // EV3 resolution is 178 x 128
         var width = Math.min(data[0], 178);
@@ -21,22 +21,19 @@ var rgf = (function () {
             }
         }
         node.src = canvas.toDataURL('image/png');
-    };
-    return {
-        loadRGF: function (node, fColor, bColor) {
-            if (fColor === void 0) { fColor = 'black'; }
-            if (bColor === void 0) { bColor = 'white'; }
-            if (node.src && node.naturalWidth === 0 && node.src.match(/\.rgf($|\?|#)/)) {
-                var xhr_1 = new XMLHttpRequest();
-                xhr_1.addEventListener('loadstart', function () {
-                    xhr_1.responseType = 'arraybuffer';
-                });
-                xhr_1.addEventListener('load', function () {
-                    setImageFromRGF(node, xhr_1.response, fColor, bColor);
-                });
-                xhr_1.open('GET', node.src);
-                xhr_1.send();
-            }
-        },
-    };
-})();
+    },
+    loadRGF: function (node, fColor, bColor) {
+        var _this = this;
+        if (fColor === void 0) { fColor = 'black'; }
+        if (bColor === void 0) { bColor = 'white'; }
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener('loadstart', function () {
+            xhr.responseType = 'arraybuffer';
+        });
+        xhr.addEventListener('load', function () {
+            _this.setImageFromRGF(node, xhr.response, fColor, bColor);
+        });
+        xhr.open('GET', node.src);
+        xhr.send();
+    },
+});

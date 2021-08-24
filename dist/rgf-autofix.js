@@ -3,8 +3,13 @@
         Array.prototype.forEach.call(document.querySelectorAll('img:not([rgf-fixed])'), (function (node) {
             var fColor = node.getAttribute('rgf-foreground-color') || undefined;
             var bColor = node.getAttribute('rgf-background-color') || undefined;
-            rgf.loadRGF(node, fColor, bColor);
-            node.setAttribute('rgf-fixed', node.src);
+            if (node.src && node.naturalWidth === 0 && node.src.match(/\.rgf($|\?|#)/)) {
+                rgf.loadRGF(node, fColor, bColor);
+                node.setAttribute('rgf-fixed', node.src);
+            }
+            else {
+                node.setAttribute('rgf-fixed', 'false');
+            }
         }));
     };
     window.addEventListener('load', function () {

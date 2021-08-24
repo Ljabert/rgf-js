@@ -1,5 +1,5 @@
-const rgf = (() => {
-    const setImageFromRGF = (node: HTMLImageElement, rgf: ArrayBuffer, fColor: string, bColor: string) => {
+const rgf = Object.freeze({
+    setImageFromRGF(node: HTMLImageElement, rgf: ArrayBuffer, fColor: string, bColor: string) {
         const data = new Uint8Array(rgf);
 
         // EV3 resolution is 178 x 128
@@ -26,24 +26,19 @@ const rgf = (() => {
         }
 
         node.src = canvas.toDataURL('image/png');
-    }
+    },
+    loadRGF(node: HTMLImageElement, fColor: string = 'black', bColor: string = 'white') {
+        const xhr = new XMLHttpRequest();
 
-    return {
-        loadRGF: (node: HTMLImageElement, fColor: string = 'black', bColor: string = 'white') => {
-            if (node.src && node.naturalWidth === 0 && node.src.match(/\.rgf($|\?|#)/)) {
-                const xhr = new XMLHttpRequest();
+        xhr.addEventListener('loadstart', () => {
+            xhr.responseType = 'arraybuffer';
+        });
 
-                xhr.addEventListener('loadstart', () => {
-                    xhr.responseType = 'arraybuffer';
-                });
-
-                xhr.addEventListener('load', () => {
-                    setImageFromRGF(node, xhr.response, fColor, bColor);
-                });
-            
-                xhr.open('GET', node.src);
-                xhr.send();
-            }
-        },
-    };
-})();
+        xhr.addEventListener('load', () => {
+            this.setImageFromRGF(node, xhr.response, fColor, bColor);
+        });
+    
+        xhr.open('GET', node.src);
+        xhr.send();
+    },
+});
